@@ -401,11 +401,14 @@ function updateSnake() {
   detectCollision();
 }
 
+/**
+ * Detects if the snake has collided with the game boundaries or its own body, and if so, triggers the game over state.
+ */
 function detectCollision() {
-  if (snake.x == 0 || snake.x == canvas.width / cellSize - 1) {
+  if (snake.x == 0 || snake.x == canvas.width / cellSize) {
     gameOver();
   }
-  if (snake.y == 0 || snake.y == canvas.height / cellSize - 1) {
+  if (snake.y == 0 || snake.y == canvas.height / cellSize) {
     gameOver();
   }
   for (let i = 0; i < snake.tail.length; i++) {
@@ -415,6 +418,9 @@ function detectCollision() {
   }
 }
 
+/**
+ * Triggers the game over state, stops the game loop, and displays the game over screen.
+ */
 function gameOver() {
   currentGameState = gameStates.gameOver;
   clearInterval(gameLoopInterval);
@@ -427,7 +433,8 @@ function gameOver() {
  */
 function eatFood() {
   if (snake.x == currentFood.x && snake.y == currentFood.y) {
-    snake.tail.push({ x: snake.x, y: snake.y });
+    const lastPiece = snake.tail[snake.tail.length - 1];
+    snake.tail.push({ x: lastPiece.x, y: lastPiece.y });
     clearCurrentFood();
     updateSpeed();
     updateScore();

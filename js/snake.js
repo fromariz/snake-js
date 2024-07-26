@@ -10,6 +10,17 @@
  * @property {number} speedCap - The minimum speed the snake can reach.
  */
 export class Snake {
+  /**
+   * Initializes a new Snake object with the given starting direction.
+   * @param {string} startDirection - The initial direction the snake should move (up, down, left, or right).
+   * @property {number} x - The x-coordinate of the snake's head.
+   * @property {number} y - The y-coordinate of the snake's head.
+   * @property {number} size - The number of segments in the snake's body.
+   * @property {number} speed - The delay (in milliseconds) between each movement of the snake.
+   * @property {string} direction - The current direction the snake is moving (up, down, left, or right).
+   * @property {Array<{x: number, y: number}>} tail - An array of objects representing the positions of the snake's tail segments.
+   * @property {number} speedCap - The minimum speed the snake can reach.
+   */
   constructor({ startDirection }) {
     this.x = 0;
     this.y = 0;
@@ -20,6 +31,11 @@ export class Snake {
     this.speedCap = 50;
   }
 
+  /**
+   * Increases the snake's speed by decreasing the delay between each movement.
+   * The speed will not decrease below the speedCap value.
+   * @param {number} decreaseAmount - The amount to decrease the speed by.
+   */
   increaseSpeed({ decreaseAmount }) {
     console.log(this.speed);
     console.log(this.speed - decreaseAmount);
