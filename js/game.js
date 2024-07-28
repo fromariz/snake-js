@@ -102,10 +102,27 @@ let activeFood = false;
  */
 let currentFood = {};
 
+let pageWidth = window.innerWidth || document.body.clientWidth;
+let treshold = Math.max(1, Math.floor(0.01 * pageWidth));
+let touchstartX = 0;
+let touchstartY = 0;
+let touchendX = 0;
+let touchendY = 0;
+
 /**
- * The fixed amount that the snake's speed is decreased by for each increase in the player's score.
+ * Calculates a limit value based on the tangent of a 45 degree angle multiplied by 1.5.
+ * This limit value is used in the gesture handling logic for the game.
+ *
+ * @constant {number} limit - The calculated limit value.
  */
-let fixedSpeedAmount = 50;
+const limit = Math.tan(((45 * 1.5) / 180) * Math.PI);
+
+/**
+ * A reference to the HTML element that represents the game area, where gesture events will be handled.
+ *
+ * @constant {HTMLElement} gestureZone - The game area element.
+ */
+const gestureZone = document.getElementById("game");
 
 // Use snake object as needed in game.js
 /**
@@ -148,6 +165,89 @@ function setup() {
  * The function also handles pausing and resuming the game when the Enter key is pressed, and starting a new game when the Escape key is pressed.
  */
 function setupControls() {
+  handleKeyPress();
+
+  handleGestures();
+}
+
+function handleGestures() {
+  gestureZone.addEventListener(
+    "touchstart",
+    function (event) {
+      touchstartX = event.changedTouches[0].screenX;
+      touchstartY = event.changedTouches[0].screenY;
+    },
+    false
+  );
+
+  gestureZone.addEventListener(
+    "touchend",
+    function (event) {
+      touchendX = event.changedTouches[0].screenX;
+      touchendY = event.changedTouches[0].screenY;
+      handleGesture(event);
+    },
+    false
+  );
+
+  function handleGesture(e) {
+    let x = touchendX - touchstartX;
+    let y = touchendY - touchstartY;
+    let xy = Math.abs(x / y);
+    let yx = Math.abs(y / x);
+    if (Math.abs(x) > treshold || Math.abs(y) > treshold) {
+      if (yx <= limit) {
+        if (x < 0) {
+          console.log("left");
+          if (snake.direction != "right") {
+            lastKey = snake.direction;
+            snake.direction = "left";
+            runGame();
+          }
+        } else {
+          console.log("right");
+          if (snake.direction != "left") {
+            lastKey = snake.direction;
+            snake.direction = "right";
+            runGame();
+          }
+        }
+      }
+      if (xy <= limit) {
+        if (y < 0) {
+          console.log("top");
+          if (snake.direction != "down") {
+            lastKey = snake.direction;
+            snake.direction = "up";
+            runGame();
+          }
+        } else {
+          console.log("bottom");
+          if (snake.direction != "up") {
+            lastKey = snake.direction;
+            snake.direction = "down";
+            runGame();
+          }
+        }
+      }
+    } else {
+      _tapped = true;
+      console.log("tap");
+    }
+  }
+  // if (keyname === "enter") {
+  //   if (currentGameState == gameStates.running) {
+  //     currentGameState = gameStates.paused;
+  //   } else if (currentGameState == gameStates.paused) {
+  //     currentGameState = gameStates.running;
+  //   }
+  // }
+  // if (keyname === "escape") {
+  //   gameOver();
+  // }
+}
+
+function handleKeyPress() {
   document.addEventListener("keydown", function (event) {
     let keyname = event.key.replace("Arrow", "").toLowerCase();
     if (keys.includes(keyname)) {

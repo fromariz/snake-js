@@ -1,6 +1,12 @@
 :root {
   --spritesize: 16px;
+  --header-height: 10px;
   font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
 }
 
 .gamecontainer {
@@ -15,9 +21,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 0;
+    padding: 20px 10px;
     color: #e43d3d;
     font-weight: 600;
+    height: var(--header-height);
 }
 
 #game {
@@ -102,4 +109,32 @@
   background: url(../assets/tilemap.png);
   background-position: calc(calc(16px * 17) * -1) calc(calc(16px * 8) * -1);
   margin-right: 10px;
+}
+
+@media screen and (max-width: 769px) {
+  body, html {
+    max-height: calc(100dvh - calc(var(--header-height) * 5));
+  }
+
+ .gamecontainer {
+    width: 100dvw;
+    max-width: 100dvw;
+    height: 100dvh;
+    /* margin: 0 auto; */
+    position: relative;
+    padding: 0;
+    max-height: calc(100dvh - calc(var(--header-height) * 5));
+  }
+
+  .keys {
+    display: none;
+  }
+
+  #game {
+    background-color: #000000;
+    border: solid 1px #2bcc1c;
+    width: 100dvw;
+    height: 100dvh;
+    max-height: calc(100dvh - calc(var(--header-height) * 5));
+  }
 }
