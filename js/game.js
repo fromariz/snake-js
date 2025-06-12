@@ -408,7 +408,7 @@ function spawnFood() {
   let x = Math.floor(Math.random() * cols);
   let y = Math.floor(Math.random() * rows);
   let cell = { x: x, y: y };
-  if (snake.tail.includes(cell)) {
+  if (isCellOccupied(cell)) {
     spawnFood();
   } else {
     activeFood = true;
@@ -416,6 +416,18 @@ function spawnFood() {
     context.fillRect(x * cellSize, y * cellSize, cellInnerSize, cellInnerSize);
     currentFood = cell;
   }
+}
+
+/**
+ * Determines if the specified cell is occupied by the snake's head or tail.
+ * @param {{x: number, y: number}} cell - The cell to check for occupancy.
+ * @returns {boolean} True if the cell is currently occupied by any part of the snake.
+ */
+function isCellOccupied(cell) {
+  if (snake.x === cell.x && snake.y === cell.y) {
+    return true;
+  }
+  return snake.tail.some((part) => part.x === cell.x && part.y === cell.y);
 }
 
 /**
